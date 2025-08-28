@@ -1,15 +1,13 @@
 import userModel from "../Model/userModel.js";
 
-
-
 export const Signup = async (req, res) => {
-    let { name, email,number,address, password,file } = req.body;
+    let { name, email, number, address, password, file } = req.body;
     let email_toLowerCase = email.toLowerCase();
     try {
         const user = await userModel.findOne({ email: email_toLowerCase })
         if (user) {
-           res.status(400).json({ message: "User already exist" })
-            return ;
+            res.status(400).json({ message: "User already exist" })
+            return;
         }
         const result = await userModel.create({
             name,
@@ -22,6 +20,28 @@ export const Signup = async (req, res) => {
         res.status(200).json({ message: "SignUp successful", result })
     } catch (error) {
         res.status(500).json({ message: "Something went wrong" + error })
+    }
+}
+
+export const UpdateUser = async (req, res) => {
+    let { userId, name, file } = req.body
+    try {
+        if (!userId) {
+            res.status(400).json({ message: "Please provide user_id" });
+            return;
+        }
+        const updateUser = await userModel.findByIdAndUpdate(
+            userId, {
+            name,
+            file,
+        },
+            { new: true },
+        );
+
+        res.status(200).json({ message: "User updated successfully", updateUser });
+
+    } catch (error) {
+        res.status(500).json({ message: "Something went wrong " + error });
     }
 }
 
@@ -39,7 +59,7 @@ export const Signin = async (req, res) => {
             return;
         }
 
-        res.status(200).json({ message: "Signin successfull",result:user })
+        res.status(200).json({ message: "Signin successfull", result: user })
     } catch (error) {
         res.status(500).json({ message: `Something went wrong ${error}` })
     }
@@ -47,7 +67,7 @@ export const Signin = async (req, res) => {
 
 export const GetAllUsers = async (req, res) => {
     try {
-        const result = await userModel.find({}).sort({created_at: -1});
+        const result = await userModel.find({}).sort({ created_at: -1 });
         res.status(200).json({ message: "Users fetched", result })
     } catch (error) {
         res.status(500).json({ message: `Something went wrong ${error}` })

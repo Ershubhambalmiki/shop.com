@@ -19,7 +19,7 @@ export const AddProduct = async (req, res) => {
             description
 
         })
-        res.status(200).json({ message: "Product Aded", addProduct })
+        res.status(200).json({ message: "Product Aded susccessfuly", addProduct })
     } catch (error) {
         res.status(500).json({ message: "somethin whant wrong" + error })
 
